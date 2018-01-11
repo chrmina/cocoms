@@ -1,5 +1,7 @@
 # CoCoMS | Installation
 
+[Home](home.md) | [Overview](overview.md) | Installation | [Translations](translations.md)
+
 ## Introduction
 **CoCoMS** is a simple Document Management System designed specifically for the management of correspondence generated during the execution of a construction project. **CoCoMS** was built using the excellent [CakePHP](https://book.cakephp.org/3.0/en/installation.html) framework.
 
@@ -25,9 +27,3 @@ Step by step instructions:
 * Run composer to download all dependencies: `composer update`
 * Rename `app.default.php` to `app.php`
 * Edit `app.php` to match your system configuration.
-
-## Contents
-* [Home](home.md)
-* [Overview](overview.md)
-* Installation
-* [Translations](translations.md)
