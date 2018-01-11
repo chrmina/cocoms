@@ -62,7 +62,7 @@ composer selfupdate
 composer update
 ```
 ## Documentation
-For documentation, as well as details about the system, see the [Docs](Docs/home.md) directory of this repository.
+For documentation, as well as details about the system, see the [Docs](Docs/home.md).
 
 ## Support
 For bugs and feature requests, please use the issues section of this repository.
