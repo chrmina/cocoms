@@ -56,11 +56,68 @@ Step by step installation instructions:
 * Rename `app.default.php` to `app.php`
 * Edit `app.php` to match your system configuration.
 
-```shell
-git clone http://github.com/chrmina/cocoms.git
-composer selfupdate
-composer update
+Find the the security salt code in `app.php` and change it to a random alphanumerical string.
+```php
+<?php
+'Security' => [
+    'salt' => 'CHANGE_THIS_TO_A_RANDOM_ALPHANUMERIC_STRING',
+],
 ```
+Find the default datasources in `app.php` and change the username, password and database names to match your system's configuration.
+```php
+<?php
+'Datasources' => [
+    'default' => [
+        'className' => 'Cake\Database\Connection',
+        'driver' => 'Cake\Database\Driver\Mysql',
+        'persistent' => false,
+        'host' => 'localhost',
+        // CHANGE username, password and database to match yours
+        'username' => 'user',
+        'password' => 'pass',
+        'database' => 'cocoms',
+        'encoding' => 'utf8',
+        'timezone' => 'UTC',
+        'cacheMetadata' => true,
+        'log' => false,
+```
+
+Edit the file `users.php` in the `config` directory and enable user registration:
+```php
+<?php
+$config = [
+  'Registration' => [
+    //determines if the register is enabled
+    'active' => true,
+```
+
+Edit the `AppController.php` file in the `src/Controller` directory to make the default registered user an admin:
+```php
+<?php
+$config['Auth']['authorize']['CakeDC/Users.SimpleRbac'] = [
+  //default role, used in new users registered and also as role matcher when no role is available
+  'default_role' => 'admin',
+```
+
+Access CoCoMS with your browser and go to `users/users/register` to register a new user. Fill the form and activate the user. Note that this user will be an admin. Use the user info to login and add other users through the Admin Menu. Once done edit the `users.php` to turn off user registration.
+```php
+<?php
+$config = [
+  'Registration' => [
+    //determines if the register is enabled
+    'active' => false,
+```
+
+Finally change the default role in `AppController.php` to user:
+```php
+<?php
+$config['Auth']['authorize']['CakeDC/Users.SimpleRbac'] = [
+  //default role, used in new users registered and also as role matcher when no role is available
+  'default_role' => 'user',
+```
+
+For more information about user management please refer to the documentation of the CakeDC [users](https://github.com/CakeDC/users) plugin.
+
 ## Documentation
 For documentation, as well as details about the system, see the [Docs](Docs/home.md).
 

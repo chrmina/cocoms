@@ -198,6 +198,7 @@ Plugin::load('Search');
 Plugin::load('CakeDC/Users', ['routes' => true, 'bootstrap' => true]);
 Plugin::load('CakeExcel', ['bootstrap' => true, 'routes' => true]);
 Configure::write('Users.config', ['users']);
+Configure::write('Users.Social.login', false); //to enable social login
 Configure::write('Users.Registration.active', false);
 Configure::write('Users.Profile.viewOthers', false);
 

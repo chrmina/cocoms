@@ -32,7 +32,7 @@ $config = [
     ],
     'Registration' => [
       //determines if the register is enabled
-      'active' => true,
+      'active' => false,
       //determines if the reCaptcha is enabled for registration
       'reCaptcha' => true,
       //allow a logged in user to access the registration form
@@ -77,7 +77,7 @@ $config = [
     ],
     'Profile' => [
       //Allow view other users profiles
-      'viewOthers' => true,
+      'viewOthers' => false,
       'route' => ['plugin' => 'CakeDC/Users', 'controller' => 'Users', 'action' => 'profile'],
     ],
     'Key' => [
@@ -140,7 +140,7 @@ $config = [
     ],
     'authorize' => [
       'CakeDC/Auth.Superuser',
-      'CakeDC/Auth.SimpleRbac',
+      'CakeDC/Auth.SimpleRbac'
     ],
   ],
   'OAuth' => [
