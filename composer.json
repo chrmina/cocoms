@@ -10,17 +10,18 @@
         "mobiledetect/mobiledetectlib": "2.*",
         "cakephp/migrations": "~1.0",
         "cakephp/plugin-installer": "*",
-        "josegonzalez/cakephp-upload": "^3.4",
+        "josegonzalez/cakephp-upload": "^3.7",
         "muffin/tags": "^1.0.0",
-        "friendsofcake/search": "^4.1.0",
+        "friendsofcake/search": "^4.2",
         "cakedc/users": "^6.0",
-        "dakota/cake-excel": "^2.0"
+        "dakota/cake-excel": "^2.0",
+        "cakedc/auth": "^2.0",
+        "cakedc/mixer": "^1.1"
     },
     "require-dev": {
         "psy/psysh": "@stable",
         "cakephp/debug_kit": "~3.0",
-        "cakephp/bake": "~1.0",
-        "cakedc/mixer": "^1.1"
+        "cakephp/bake": "~1.0"
     },
     "suggest": {
         "phpunit/phpunit": "Allows automated tests to be run without system-wide install.",
