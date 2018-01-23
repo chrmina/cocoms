@@ -13,7 +13,7 @@
         "josegonzalez/cakephp-upload": "^3.4",
         "muffin/tags": "^1.0.0",
         "friendsofcake/search": "^4.1.0",
-        "cakedc/users": "^5.2.0",
+        "cakedc/users": "^6.0",
         "dakota/cake-excel": "^2.0"
     },
     "require-dev": {
