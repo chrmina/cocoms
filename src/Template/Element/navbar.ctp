@@ -11,7 +11,18 @@
      </div>
      <div id="navbar" class="collapse navbar-collapse">
        <ul class="nav navbar-nav">
-         <?php
+        <?php
+           if ($this->request->params['controller'] == 'Dashboard') {
+             echo '<li class="active">';
+             echo $this->User->AuthLink->link(__('Dashboard'), '/dashboard/index');
+             echo '</li>';
+           } else {
+             echo '<li>';
+             echo $this->User->AuthLink->link(__('Dashboard'), '/dashboard/index');
+             echo '</li>';
+           }
+        ?>
+        <?php
          if ($this->request->params['controller'] == 'Letters') {
            echo '<li class="active dropdown">';
          } else {
@@ -32,6 +43,7 @@
                echo '</li>';
              }
              ?>
+             <li role="separator" class="divider"></li>
              <li>
                <?= $this->Html->link('Create Excel file', ['controller' => 'Letters', 'action' => 'index', '_ext' => 'xlsx', 'plugin' => false]) ?>
              </li>
@@ -58,6 +70,7 @@
                echo '</li>';
              }
              ?>
+             <li role="separator" class="divider"></li>
              <li>
                <?= $this->Html->link('Create Excel file', ['controller' => 'Senders', 'action' => 'index', '_ext' => 'xlsx', 'plugin' => false]) ?>
              </li>
@@ -84,6 +97,7 @@
                echo '</li>';
              }
              ?>
+             <li role="separator" class="divider"></li>
              <li>
                <?= $this->Html->link('Create Excel file', ['controller' => 'Recipients', 'action' => 'index', '_ext' => 'xlsx', 'plugin' => false]) ?>
              </li>
@@ -110,13 +124,12 @@
                echo '</li>';
              }
              ?>
+             <li role="separator" class="divider"></li>
              <li>
                <?= $this->Html->link('Create Excel file', ['controller' => 'WorkPackages', 'action' => 'index', '_ext' => 'xlsx', 'plugin' => false]) ?>
              </li>
            </ul>
          </li>
-       </ul>
-       <ul class="nav navbar-nav navbar-right">
          <?php if ($this->request->session()->read('Auth.User.role') == 'admin'): ?>
            <li class="dropdown">
              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin Menu <b class="caret"></b></a>
@@ -130,10 +143,33 @@
              </ul>
            </li>
          <?php endif; ?>
-         <li>
-           <?= $this->User->AuthLink->link(__('Profile'), '/profile') ?>
+       </ul>
+       <ul class="nav navbar-nav navbar-right">
+         <li class="dropdown">
+           <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-user"></i>
+             <?= $this->request->session()->read('Auth.User.first_name') ?>
+             <b class="caret"></b></a>
+           <ul class="dropdown-menu" role="menu">
+             <li class="dropdown-header">
+               Signed in as: <?= $this->request->session()->read('Auth.User.username') ?>
+             </li>
+             <li class="dropdown-header">
+               Role Type: <?= $this->request->session()->read('Auth.User.role') ?>
+             </li>
+             <li role="separator" class="divider"></li>
+             <li>
+               <?= $this->Html->link(__('View Profile'), ['controller' => 'users', 'action' => 'profile', 'plugin' => 'CakeDC/users']) ?>
+             </li>
+             <li>
+               <?= $this->Html->link(__('Edit Profile'), ['controller' => 'users', 'action' => 'edit', $this->request->session()->read('Auth.User.id'), 'plugin' => 'CakeDC/users']) ?>
+             </li>
+             <li>
+               <?= $this->Html->link(__('Change Password'), ['controller' => 'users', 'action' => 'changePassword', $this->request->session()->read('Auth.User.id'), 'plugin' => 'CakeDC/users']) ?>
+             </li>
+             <li role="separator" class="divider"></li>
+             <li><?= $this->User->AuthLink->link(__('Logout'), '/logout') ?></li>
+           </ul>
          </li>
-         <li><?= $this->User->AuthLink->link(__('Logout'), '/logout') ?></li>
        </ul>
      </div><!--/.nav-collapse -->
    </div>

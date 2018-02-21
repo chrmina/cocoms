@@ -47,12 +47,12 @@ echo $this->Html->css(['starter-template.css']);
   echo $this->Html->script('typeahead.bundle');
   // IE10 viewport hack for Surface/desktop Windows 8 bug
   echo $this->Html->script('ie10-viewport-bug-workaround.js');
- ?>
- <script>
+?>
+<script>
  $(document).ready(function(){
   $('input').iCheck({
     checkboxClass: 'icheckbox_flat-green',
     radioClass: 'iradio_flat-green'
   });
  });
- </script>
+</script>

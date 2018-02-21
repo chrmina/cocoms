@@ -5,7 +5,7 @@ namespace App\Controller;
 /**
  * Documents Controller.
  *
- * @property \App\Model\Table\DocumentsTable $Documents
+ * @property \App\Model\Table\LettersTable $Letters
  */
 class LettersController extends AppController
 {
