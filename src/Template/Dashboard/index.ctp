@@ -16,3 +16,6 @@
 <p>
   <?= "Total WPs: ".$totwp ?></td>
 </p>
+<p>
+  <?= "Letters from Contractor: ".$number ?></td>
+</p>
