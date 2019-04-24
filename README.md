@@ -1,7 +1,9 @@
 ![CoCoMS Logo](https://raw.githubusercontent.com/chrmina/cocoms/master/webroot/img/main.png)
 
 # CoCoMS
-> Construction Correspondence Management System
+Construction Correspondence Management System
+
+[![Build Status](https://travis-ci.org/chrmina/cocoms.svg?branch=master)](https://travis-ci.org/chrmina/cocoms)
 
 **DEMO**: [CoCoMS Demo](http://christos.heliohost.org/cocoms/)
 
