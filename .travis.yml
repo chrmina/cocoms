@@ -3,14 +3,35 @@ language: php
 sudo: false
 
 php:
+  - 7.0
   - 7.1
 
+services:
+  - mysql
+
+env:
+  matrix:
+    - DB=mysql DATABASE_TEST_URL='mysql://root:password@127.0.0.1/cakephp_test'
+    - DB=pgsql DATABASE_TEST_URL='postgres://travis@127.0.0.1/cakephp_test'
+    - DB=sqlite DATABASE_TEST_URL='sqlite:///:memory:'
+
+matrix:
+  fast_finish: true
+
+  include:
+    - php: 7.0
+      env: PHPCS=1
+
 before_script:
-  - sh -c "composer require 'cakephp/cakephp-codesniffer:dev-master'"
-  - phpenv rehash
+  - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'CREATE DATABASE IF NOT EXISTS cakephp_test;'; fi"
+  - sh -c "if [ '$DB' = 'mysql' ]; then echo \"USE mysql;\nUPDATE user SET password=PASSWORD('password') WHERE user='root';\nFLUSH PRIVILEGES;\n\" | mysql -u root; fi"
+  - sh -c "if [ '$DB' = 'pgsql' ]; then psql -c 'CREATE DATABASE cakephp_test;' -U postgres; fi"
+  - if [[ $PHPCS = 1 ]]; then composer require cakephp/cakephp-codesniffer:^3.0.0; fi
+  - if [[ $PHPCS != 1 ]]; then composer install; fi
 
 script:
-  - sh -c "vendor/bin/phpcs -p --extensions=php --standard=vendor/cakephp/cakephp-codesniffer/CakePHP ./src ./tests ./config ./webroot"
+  - if [[ $PHPCS != 1 ]]; then vendor/bin/phpunit; fi
+  - if [[ $PHPCS = 1 ]]; then vendor/bin/phpcs -p --extensions=php --standard=vendor/cakephp/cakephp-codesniffer/CakePHP ./src ./tests ./config ./webroot; fi
 
 notifications:
   email: false
