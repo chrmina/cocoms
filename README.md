@@ -3,10 +3,9 @@
 # CoCoMS
 Construction Correspondence Management System
 
-[![Build Status](https://travis-ci.org/chrmina/cocoms.svg?branch=master)](https://travis-ci.org/chrmina/cocoms)
 [![Hits-of-Code](https://hitsofcode.com/github/chrmina/cocoms)](https://hitsofcode.com/github/chrmina/cocoms)
 
-**DEMO**: [CoCoMS Demo](http://christos.heliohost.org/cocoms/)
+**DEMO**: [CoCoMS Demo](#)
 
 Login Credentials (login:pass)
 * User -> user:user
