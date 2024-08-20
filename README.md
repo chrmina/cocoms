@@ -1,7 +1,8 @@
 ![CoCoMS Logo](https://raw.githubusercontent.com/chrmina/cocoms/main/Docs/CoCoMS-Logo.png)
 
-# CoCoMS
-Construction Correspondence Management System
+# CoCoMS: Construction Correspondence Management System
+
+**The documents are outdated. A new version of CoCoMS will be uploaded.**
 
 [![Hits-of-Code](https://hitsofcode.com/github/chrmina/cocoms)](https://hitsofcode.com/github/chrmina/cocoms)
 
