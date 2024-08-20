@@ -1,4 +1,4 @@
-![CoCoMS Logo](https://raw.githubusercontent.com/chrmina/cocoms/master/webroot/img/main.png)
+![CoCoMS Logo](https://raw.githubusercontent.com/chrmina/cocoms/main/Docs/CoCoMS-Logo.png)
 
 # CoCoMS
 Construction Correspondence Management System
