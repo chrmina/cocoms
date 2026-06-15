@@ -22,7 +22,7 @@ class FileUploadService
         return [
             'path' => $filePath,
             'directory' => $this->path,
-            'url' => Storage::disk($this->disk)->url($filePath),
+            'url' => Storage::url($filePath),
         ];
     }
 
@@ -37,7 +37,7 @@ class FileUploadService
 
     public function getUrl(string $filePath): string
     {
-        return Storage::disk($this->disk)->url($filePath);
+        return Storage::url($filePath);
     }
 
     public function exists(string $filePath): bool

@@ -91,7 +91,7 @@ class WorkPackageController extends Controller
     {
         $this->authorize('viewAny', WorkPackage::class);
 
-        $query = $request->get('q', '');
+        $query = $request->input('q', '');
         $workPackages = $query
             ? $this->workPackageService->searchWorkPackages($query)
             : collect();

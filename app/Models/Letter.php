@@ -29,6 +29,8 @@ class Letter extends Model
         'tag_count',
     ];
 
+    // Note: sender_id and recipient_id now reference the companies table
+
     protected function casts(): array
     {
         return [
@@ -40,14 +42,25 @@ class Letter extends Model
         ];
     }
 
+    public function senderCompany()
+    {
+        return $this->belongsTo(Company::class, 'sender_id');
+    }
+
+    public function recipientCompany()
+    {
+        return $this->belongsTo(Company::class, 'recipient_id');
+    }
+
+    // Aliases for backward compatibility
     public function sender()
     {
-        return $this->belongsTo(Sender::class, 'sender_id');
+        return $this->senderCompany();
     }
 
     public function recipient()
     {
-        return $this->belongsTo(Recipient::class, 'recipient_id');
+        return $this->recipientCompany();
     }
 
     public function workPackage()
@@ -70,5 +83,29 @@ class Letter extends Model
     public function taggedItems()
     {
         return $this->hasMany(TaggedItem::class, 'fk_id')->where('fk_table', 'letters');
+    }
+
+    public function referencedLetters()
+    {
+        return $this->belongsToMany(
+            Letter::class,
+            'letter_references',
+            'letter_id',
+            'referenced_letter_id',
+            'id',
+            'id'
+        );
+    }
+
+    public function referencingLetters()
+    {
+        return $this->belongsToMany(
+            Letter::class,
+            'letter_references',
+            'referenced_letter_id',
+            'letter_id',
+            'id',
+            'id'
+        );
     }
 }

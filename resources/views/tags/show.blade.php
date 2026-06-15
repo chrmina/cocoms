@@ -57,8 +57,8 @@
                                 @foreach ($tag->taggedItems as $tagged)
                                     <tr class="bg-white border-b hover:bg-gray-50">
                                         <td class="px-6 py-4 font-medium text-gray-900">{{ Str::limit($tagged->letter?->subject, 50) }}</td>
-                                        <td class="px-6 py-4 text-gray-600">{{ $tagged->letter?->sender?->name }}</td>
-                                        <td class="px-6 py-4 text-gray-600">{{ $tagged->letter?->recipient?->name }}</td>
+                                        <td class="px-6 py-4 text-gray-600">{{ $tagged->letter?->senderCompany?->name }}</td>
+                                        <td class="px-6 py-4 text-gray-600">{{ $tagged->letter?->recipientCompany?->name }}</td>
                                         <td class="px-6 py-4 text-gray-600">{{ $tagged->letter?->docdate?->format('Y-m-d') ?? 'N/A' }}</td>
                                         <td class="px-6 py-4 text-right">
                                             <a href="{{ route('letters.show', $tagged->letter) }}" class="text-blue-600 hover:text-blue-900 text-sm">View</a>

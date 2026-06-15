@@ -17,7 +17,7 @@
                     <img src="{{ asset('img/main.png') }}" alt="CoCoMS" class="w-32 h-32 mx-auto mb-6">
                     <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">CoCoMS</h1>
                     <p class="text-xl text-gray-600 mb-8">Construction Correspondence Management System</p>
-                    
+
                     @if (!auth()->check())
                         <a href="{{ route('login') }}" class="inline-flex items-center px-6 py-3 bg-blue-600 border border-transparent rounded-md font-semibold text-base text-white hover:bg-blue-700 transition-colors">
                             Sign In
@@ -91,7 +91,7 @@
                                     </div>
                                     <span class="text-indigo-600 text-xl">→</span>
                                 </a>
-                                
+
                                 <a href="{{ route('page', 'letter-naming') }}" class="flex items-center p-4 bg-cyan-50 rounded-lg hover:bg-cyan-100 transition-colors border border-cyan-200">
                                     <div class="flex-1">
                                         <h4 class="font-semibold text-gray-900">Letter Naming</h4>
@@ -99,7 +99,7 @@
                                     </div>
                                     <span class="text-cyan-600 text-xl">→</span>
                                 </a>
-                                
+
                                 <a href="{{ route('page', 'work-breakdown-structure') }}" class="flex items-center p-4 bg-teal-50 rounded-lg hover:bg-teal-100 transition-colors border border-teal-200">
                                     <div class="flex-1">
                                         <h4 class="font-semibold text-gray-900">WBS</h4>
@@ -135,7 +135,7 @@
                                     </div>
                                     <span class="text-blue-600 text-xl">→</span>
                                 </a>
-                                
+
                                 <a href="{{ route('work-packages.index') }}" class="flex items-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors border border-green-200">
                                     <div class="flex-1">
                                         <h4 class="font-semibold text-gray-900">Work Packages</h4>
@@ -143,23 +143,15 @@
                                     </div>
                                     <span class="text-green-600 text-xl">→</span>
                                 </a>
-                                
-                                <a href="{{ route('senders.index') }}" class="flex items-center p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors border border-purple-200">
+
+                                <a href="{{ route('companies.index') }}" class="flex items-center p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors border border-purple-200">
                                     <div class="flex-1">
-                                        <h4 class="font-semibold text-gray-900">Senders</h4>
-                                        <p class="text-sm text-gray-600">Manage senders</p>
+                                        <h4 class="font-semibold text-gray-900">Companies</h4>
+                                        <p class="text-sm text-gray-600">Manage companies (senders & recipients)</p>
                                     </div>
                                     <span class="text-purple-600 text-xl">→</span>
                                 </a>
-                                
-                                <a href="{{ route('recipients.index') }}" class="flex items-center p-4 bg-yellow-50 rounded-lg hover:bg-yellow-100 transition-colors border border-yellow-200">
-                                    <div class="flex-1">
-                                        <h4 class="font-semibold text-gray-900">Recipients</h4>
-                                        <p class="text-sm text-gray-600">Manage recipients</p>
-                                    </div>
-                                    <span class="text-yellow-600 text-xl">→</span>
-                                </a>
-                                
+
                                 <a href="{{ route('tags.index') }}" class="flex items-center p-4 bg-pink-50 rounded-lg hover:bg-pink-100 transition-colors border border-pink-200">
                                     <div class="flex-1">
                                         <h4 class="font-semibold text-gray-900">Tags</h4>

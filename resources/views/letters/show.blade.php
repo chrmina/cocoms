@@ -29,11 +29,15 @@
                 <div class="grid grid-cols-2 gap-6 mb-6">
                     <div>
                         <label class="block text-sm font-medium text-gray-600">From (Sender)</label>
-                        <p class="text-gray-900 font-semibold">{{ $letter->sender?->name }}</p>
+                        <p class="text-gray-900 font-semibold">
+                            <a href="{{ route('companies.show', $letter->senderCompany?->id) }}" class="text-blue-600 hover:text-blue-900">{{ $letter->senderCompany?->name }}</a>
+                        </p>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-600">To (Recipient)</label>
-                        <p class="text-gray-900 font-semibold">{{ $letter->recipient?->name }}</p>
+                        <p class="text-gray-900 font-semibold">
+                            <a href="{{ route('companies.show', $letter->recipientCompany?->id) }}" class="text-blue-600 hover:text-blue-900">{{ $letter->recipientCompany?->name }}</a>
+                        </p>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-600">Work Package</label>
@@ -104,25 +108,32 @@
                     </div>
                 @endif
 
-                @can('update', $letter)
+                @if ($letter->referencedLetters->count())
                     <div class="mb-6">
-                        <label class="block text-sm font-medium text-gray-600 mb-2">Add Tag</label>
-                        <form method="POST" action="{{ route('letters.tags.attach', $letter) }}" class="flex gap-2">
-                            @csrf
-                            <select name="tag_id" class="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                                <option value="">Select a tag...</option>
-                                @foreach (\App\Models\Tag::orderBy('label')->get() as $tag)
-                                    @if (!$letter->taggedItems->contains('tag_id', $tag->id))
-                                        <option value="{{ $tag->id }}">{{ $tag->label }}</option>
-                                    @endif
-                                @endforeach
-                            </select>
-                            <button type="submit" class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white hover:bg-green-700">
-                                Add
-                            </button>
-                        </form>
+                        <label class="block text-sm font-medium text-gray-600">Referenced Letters</label>
+                        <div class="mt-3 space-y-2">
+                            @foreach ($letter->referencedLetters as $ref)
+                                <div class="flex items-center justify-between p-3 bg-gray-50 border border-gray-200 rounded">
+                                    <div>
+                                        <a href="{{ route('letters.show', $ref) }}" class="text-blue-600 hover:text-blue-900 font-medium">
+                                            {{ $ref->subject }}
+                                        </a>
+                                        <p class="text-xs text-gray-600">
+                                            {{ $ref->docref ?? 'No Ref' }} • {{ $ref->docdate?->format('Y-m-d') }}
+                                        </p>
+                                    </div>
+                                    @can('update', $letter)
+                                        <form method="POST" action="{{ route('letters.references.detach', [$letter, $ref]) }}" style="display: inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="text-red-600 hover:text-red-900 font-bold">&times;</button>
+                                        </form>
+                                    @endcan
+                                </div>
+                            @endforeach
+                        </div>
                     </div>
-                @endcan
+                @endif
 
                 <div class="flex justify-between border-t pt-6">
                     <a href="{{ route('letters.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white hover:bg-gray-700">

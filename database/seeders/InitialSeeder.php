@@ -3,8 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use App\Models\Sender;
-use App\Models\Recipient;
+use App\Models\Company;
 use App\Models\WorkPackage;
 use App\Models\Letter;
 use App\Models\Tag;
@@ -52,56 +51,37 @@ class InitialSeeder extends Seeder
             'password' => bcrypt('password'),
             'first_name' => 'Viewer',
             'last_name' => 'User',
-            'role' => 'user',
+            'role' => 'viewer',
             'active' => true,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
 
-        // Create sample senders
-        $senders = [
-            ['name' => 'John Smith', 'email' => 'john.smith@example.com', 'company' => 'ABC Contractors'],
-            ['name' => 'Jane Doe', 'email' => 'jane.doe@example.com', 'company' => 'XYZ Engineers'],
-            ['name' => 'Mike Johnson', 'email' => 'mike@example.com', 'company' => 'Construction Co'],
+        // Create sample companies (formerly senders and recipients)
+        $companies = [
+            ['name' => 'Cool Employer Corporation (CEC)', 'email' => 'homer.simpson@example.com', 'representative' => 'Homer Simpson'],
+            ['name' => 'Excellent International Contractor (EIC)', 'email' => 'john.smith@example.com', 'representative' => 'John Smith'],
+            ['name' => 'Great International Consultants (GIC)', 'email' => 'peter.smith@example.com', 'representative' => 'Peter Smith'],
+            ['name' => 'Knowledgeable International Subcontractor (KIS)', 'email' => 'montgomery.burns@example.com', 'representative' => 'Montgomery Burns'],
         ];
 
-        foreach ($senders as $senderData) {
-            Sender::create([
+        foreach ($companies as $companyData) {
+            Company::create([
                 'id' => Str::uuid(),
-                'name' => $senderData['name'],
-                'email' => $senderData['email'],
+                'name' => $companyData['name'],
+                'email' => $companyData['email'],
                 'address' => '123 Main St, City, State',
-                'representative' => $senderData['name'],
-                'contact' => $senderData['name'],
+                'representative' => $companyData['representative'],
+                'contact' => $companyData['representative'],
                 'telephone' => '(555) 123-4567',
                 'mobile' => '(555) 987-6543',
             ]);
         }
 
-        // Create sample recipients
-        $recipients = [
-            ['name' => 'Project Manager', 'email' => 'pm@projects.local'],
-            ['name' => 'Site Supervisor', 'email' => 'supervisor@projects.local'],
-            ['name' => 'Quality Assurance', 'email' => 'qa@projects.local'],
-        ];
-
-        foreach ($recipients as $recipientData) {
-            Recipient::create([
-                'id' => Str::uuid(),
-                'name' => $recipientData['name'],
-                'email' => $recipientData['email'],
-                'address' => '456 Project Ave, City, State',
-                'contact' => $recipientData['name'],
-                'telephone' => '(555) 111-2222',
-            ]);
-        }
-
         // Create sample work packages
         $workPackages = [
-            ['number' => 'WP-001', 'name' => 'Site Preparation', 'coordinator' => 'John Smith'],
-            ['number' => 'WP-002', 'name' => 'Foundation Work', 'coordinator' => 'Jane Doe'],
-            ['number' => 'WP-003', 'name' => 'Structural Work', 'coordinator' => 'Mike Johnson'],
-            ['number' => 'WP-004', 'name' => 'MEP Installation', 'coordinator' => 'Sarah Wilson'],
+            ['number' => 'WP00000', 'name' => 'None', 'coordinator' => 'N/A', 'qs' => 'N/A'],
+            ['number' => 'WP20000', 'name' => 'Civil Works', 'coordinator' => 'John Smith', 'qs' => 'Jane Doe'],
         ];
 
         foreach ($workPackages as $wpData) {
@@ -110,7 +90,7 @@ class InitialSeeder extends Seeder
                 'number' => $wpData['number'],
                 'name' => $wpData['name'],
                 'wp_coordinator' => $wpData['coordinator'],
-                'wp_qs' => 'Quality Supervisor',
+                'wp_qs' => $wpData['qs'],
             ]);
         }
 
@@ -138,16 +118,15 @@ class InitialSeeder extends Seeder
         }
 
         // Create sample letters
-        $senders = Sender::all();
-        $recipients = Recipient::all();
+        $companies = Company::all();
         $workPackages = WorkPackage::all();
 
-        if ($senders->count() > 0 && $recipients->count() > 0 && $workPackages->count() > 0) {
+        if ($companies->count() > 1 && $workPackages->count() > 0) {
             for ($i = 1; $i <= 5; $i++) {
                 Letter::create([
                     'id' => Str::uuid(),
-                    'sender_id' => $senders->random()->id,
-                    'recipient_id' => $recipients->random()->id,
+                    'sender_id' => $companies->random()->id,
+                    'recipient_id' => $companies->random()->id,
                     'work_package_id' => $workPackages->random()->id,
                     'docref' => 'DOC-' . str_pad($i, 4, '0', STR_PAD_LEFT),
                     'subject' => 'Sample Letter ' . $i,
@@ -165,9 +144,8 @@ class InitialSeeder extends Seeder
         $this->command->info('Initial database seeding completed!');
         $this->command->info('Created:');
         $this->command->info('  - 3 users (admin, editor, viewer with password "password")');
-        $this->command->info('  - 3 senders');
-        $this->command->info('  - 3 recipients');
-        $this->command->info('  - 4 work packages');
+        $this->command->info('  - 4 companies');
+        $this->command->info('  - 2 work packages');
         $this->command->info('  - 6 tags');
         $this->command->info('  - 5 sample letters');
     }

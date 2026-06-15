@@ -4,7 +4,7 @@ namespace App\Policies;
 
 use App\Models\Letter;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
+//use Illuminate\Auth\Access\Response;
 
 class LetterPolicy
 {
@@ -13,12 +13,12 @@ class LetterPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->active && in_array($user->role, ['user', 'editor', 'admin']);
+        return $user->active && in_array($user->role, ['viewer', 'editor', 'admin']);
     }
 
     public function view(User $user, Letter $letter): bool
     {
-        return $user->active && in_array($user->role, ['user', 'editor', 'admin']);
+        return $user->active && in_array($user->role, ['viewer', 'editor', 'admin']);
     }
 
     public function create(User $user): bool
@@ -33,7 +33,7 @@ class LetterPolicy
 
     public function delete(User $user, Letter $letter): bool
     {
-        return $user->active && $user->role === 'admin';
+        return $user->active && in_array($user->role, ['editor', 'admin']);
     }
 
     public function restore(User $user, Letter $letter): bool

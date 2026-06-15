@@ -17,7 +17,7 @@ class SearchAndTaggingTest extends TestCase
             'letters.search',
             'work-packages.search',
             'senders.search',
-            'recipients.search',
+            'companies.search',
             'tags.search',
         ];
         
@@ -129,7 +129,7 @@ class SearchAndTaggingTest extends TestCase
             'letters.search',
             'work-packages.search',
             'senders.search',
-            'recipients.search',
+            'companies.search',
             'tags.search',
         ];
         

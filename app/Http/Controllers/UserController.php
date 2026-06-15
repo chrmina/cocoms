@@ -77,7 +77,7 @@ class UserController extends Controller
     {
         $this->authorize('viewAny', User::class);
 
-        $query = $request->get('q', '');
+        $query = $request->input('q', '');
         $users = $query
             ? $this->userService->searchUsers($query)
             : $this->userService->getAllUsers();

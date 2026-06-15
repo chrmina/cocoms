@@ -2,6 +2,10 @@
 
 namespace App\Traits;
 
+/**
+ * @property bool $active
+ * @property string $role
+ */
 trait HasRoles
 {
     public function isAdmin(): bool

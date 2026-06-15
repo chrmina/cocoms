@@ -3,8 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Letter;
-use App\Models\Sender;
-use App\Models\Recipient;
+use App\Models\Company;
 use App\Models\WorkPackage;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -27,8 +26,8 @@ class LetterValidationTest extends TestCase
      */
     public function test_create_letter_with_valid_data(): void
     {
-        $sender = Sender::factory()->create();
-        $recipient = Recipient::factory()->create();
+        $sender = Company::factory()->create();
+        $recipient = Company::factory()->create();
         $workPackage = WorkPackage::factory()->create();
 
         $response = $this->actingAs($this->editor)->post('/letters', [
@@ -49,7 +48,7 @@ class LetterValidationTest extends TestCase
      */
     public function test_create_letter_requires_sender_id(): void
     {
-        $recipient = Recipient::factory()->create();
+        $recipient = Company::factory()->create();
         $workPackage = WorkPackage::factory()->create();
 
         $response = $this->actingAs($this->editor)->post('/letters', [
@@ -69,7 +68,7 @@ class LetterValidationTest extends TestCase
      */
     public function test_create_letter_requires_recipient_id(): void
     {
-        $sender = Sender::factory()->create();
+        $sender = Company::factory()->create();
         $workPackage = WorkPackage::factory()->create();
 
         $response = $this->actingAs($this->editor)->post('/letters', [
@@ -89,8 +88,8 @@ class LetterValidationTest extends TestCase
      */
     public function test_create_letter_requires_work_package_id(): void
     {
-        $sender = Sender::factory()->create();
-        $recipient = Recipient::factory()->create();
+        $sender = Company::factory()->create();
+        $recipient = Company::factory()->create();
 
         $response = $this->actingAs($this->editor)->post('/letters', [
             'sender_id' => $sender->id,
@@ -109,8 +108,8 @@ class LetterValidationTest extends TestCase
      */
     public function test_create_letter_requires_subject(): void
     {
-        $sender = Sender::factory()->create();
-        $recipient = Recipient::factory()->create();
+        $sender = Company::factory()->create();
+        $recipient = Company::factory()->create();
         $workPackage = WorkPackage::factory()->create();
 
         $response = $this->actingAs($this->editor)->post('/letters', [
@@ -167,8 +166,8 @@ class LetterValidationTest extends TestCase
      */
     public function test_unauthenticated_cannot_create_letter(): void
     {
-        $sender = Sender::factory()->create();
-        $recipient = Recipient::factory()->create();
+        $sender = Company::factory()->create();
+        $recipient = Company::factory()->create();
         $workPackage = WorkPackage::factory()->create();
 
         $response = $this->post('/letters', [
@@ -190,8 +189,8 @@ class LetterValidationTest extends TestCase
     public function test_viewer_cannot_create_letter(): void
     {
         $viewer = User::factory()->create(['role' => 'user']);
-        $sender = Sender::factory()->create();
-        $recipient = Recipient::factory()->create();
+        $sender = Company::factory()->create();
+        $recipient = Company::factory()->create();
         $workPackage = WorkPackage::factory()->create();
 
         $response = $this->actingAs($viewer)->post('/letters', [
@@ -212,8 +211,8 @@ class LetterValidationTest extends TestCase
      */
     public function test_create_letter_with_optional_flags(): void
     {
-        $sender = Sender::factory()->create();
-        $recipient = Recipient::factory()->create();
+        $sender = Company::factory()->create();
+        $recipient = Company::factory()->create();
         $workPackage = WorkPackage::factory()->create();
 
         $response = $this->actingAs($this->editor)->post('/letters', [

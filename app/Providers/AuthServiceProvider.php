@@ -3,18 +3,16 @@
 namespace App\Providers;
 
 use App\Models\Letter;
-use App\Models\Sender;
-use App\Models\Recipient;
+use App\Models\Company;
 use App\Models\WorkPackage;
 use App\Models\Tag;
 use App\Models\User;
 use App\Policies\LetterPolicy;
-use App\Policies\SenderPolicy;
-use App\Policies\RecipientPolicy;
+use App\Policies\CompanyPolicy;
 use App\Policies\WorkPackagePolicy;
 use App\Policies\TagPolicy;
 use App\Policies\UserPolicy;
-use Illuminate\Support\ServiceProvider;
+use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -23,8 +21,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         Letter::class => LetterPolicy::class,
-        Sender::class => SenderPolicy::class,
-        Recipient::class => RecipientPolicy::class,
+        Company::class => CompanyPolicy::class,
         WorkPackage::class => WorkPackagePolicy::class,
         Tag::class => TagPolicy::class,
         User::class => UserPolicy::class,

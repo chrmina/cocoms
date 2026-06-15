@@ -3,8 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Letter;
-use App\Models\Sender;
-use App\Models\Recipient;
+use App\Models\Company;
 use App\Models\WorkPackage;
 use App\Models\User;
 use Tests\TestCase;
@@ -17,14 +16,13 @@ class FileUploadExportTest extends TestCase
     public function test_export_routes_exist(): void
     {
         $routes = app('router')->getRoutes();
-        
+
         $exportRoutes = [
             'letters.export.excel',
             'work-packages.export.excel',
-            'senders.export.excel',
-            'recipients.export.excel',
+            'companies.export.excel',
         ];
-        
+
         foreach ($exportRoutes as $routeName) {
             $route = $routes->getByName($routeName);
             $this->assertNotNull($route, "Route {$routeName} not found");
@@ -40,7 +38,7 @@ class FileUploadExportTest extends TestCase
             app(\App\Services\LetterService::class),
             app(\App\Services\TagService::class)
         );
-        
+
         $this->assertTrue(method_exists($controller, 'exportExcel'));
     }
 
@@ -70,11 +68,10 @@ class FileUploadExportTest extends TestCase
     public function test_export_classes_instantiate(): void
     {
         $emptyCollection = collect([]);
-        
+
         $this->assertNotNull(new \App\Exports\LettersExport($emptyCollection));
         $this->assertNotNull(new \App\Exports\WorkPackagesExport($emptyCollection));
-        $this->assertNotNull(new \App\Exports\SendersExport($emptyCollection));
-        $this->assertNotNull(new \App\Exports\RecipientsExport($emptyCollection));
+        $this->assertNotNull(new \App\Exports\CompaniesExport($emptyCollection));
     }
 
     /**
@@ -84,7 +81,7 @@ class FileUploadExportTest extends TestCase
     {
         $request = new \App\Http\Requests\StoreLetterRequest();
         $rules = $request->rules();
-        
+
         $this->assertArrayHasKey('file', $rules);
         $this->assertContains('nullable', $rules['file']);
         $this->assertContains('file', $rules['file']);
@@ -97,7 +94,7 @@ class FileUploadExportTest extends TestCase
     {
         $request = new \App\Http\Requests\UpdateLetterRequest();
         $rules = $request->rules();
-        
+
         $this->assertArrayHasKey('file', $rules);
         $this->assertContains('nullable', $rules['file']);
         $this->assertContains('file', $rules['file']);
@@ -109,7 +106,7 @@ class FileUploadExportTest extends TestCase
     public function test_letter_model_has_file_fields(): void
     {
         $letter = new Letter();
-        
+
         $this->assertContains('filelink', $letter->getFillable());
         $this->assertContains('file_dir', $letter->getFillable());
     }

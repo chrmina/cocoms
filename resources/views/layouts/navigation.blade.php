@@ -22,11 +22,8 @@
                         <x-nav-link :href="route('work-packages.index')" :active="request()->routeIs('work-packages.*')">
                             {{ __('Work Packages') }}
                         </x-nav-link>
-                        <x-nav-link :href="route('senders.index')" :active="request()->routeIs('senders.*')">
-                            {{ __('Senders') }}
-                        </x-nav-link>
-                        <x-nav-link :href="route('recipients.index')" :active="request()->routeIs('recipients.*')">
-                            {{ __('Recipients') }}
+                        <x-nav-link :href="route('companies.index')" :active="request()->routeIs('companies.*')">
+                            {{ __('Companies') }}
                         </x-nav-link>
                         <x-nav-link :href="route('tags.index')" :active="request()->routeIs('tags.*')">
                             {{ __('Tags') }}
@@ -43,7 +40,7 @@
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6 sm:gap-4">
                 <!-- Documentation Dropdown (accessible to all) -->
-                <x-dropdown align="left" width="w-80">
+                <x-dropdown align="left" width="48">
                     <x-slot name="trigger">
                         <button class="inline-flex items-center px-3 py-2 text-sm leading-4 font-medium rounded-md text-gray-600 hover:text-gray-900 focus:outline-none transition ease-in-out duration-150">
                             {{ __('Docs') }}
@@ -137,11 +134,8 @@
                 <x-responsive-nav-link :href="route('work-packages.index')" :active="request()->routeIs('work-packages.*')">
                     {{ __('Work Packages') }}
                 </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('senders.index')" :active="request()->routeIs('senders.*')">
-                    {{ __('Senders') }}
-                </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('recipients.index')" :active="request()->routeIs('recipients.*')">
-                    {{ __('Recipients') }}
+                <x-responsive-nav-link :href="route('companies.index')" :active="request()->routeIs('companies.*')">
+                    {{ __('Companies') }}
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('tags.index')" :active="request()->routeIs('tags.*')">
                     {{ __('Tags') }}

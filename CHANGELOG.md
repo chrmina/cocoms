@@ -4,6 +4,25 @@ All notable changes to CoCoMS are documented in this file.
 
 ---
 
+## [2.0.1] - 2026-06-15
+
+### Minor Update: UI Redesign
+
+### Added
+
+#### Core Features
+- ✅ Ability to add references to other letters
+- ✅ Improved tagging (assignment, management)
+
+#### Redesign
+- ✅ Dashbord redisgn for better visualizations
+- ✅ Table lists (letters, companies, etc.)
+- ✅ Add and Edit forms
+- ✅ Unified action buttons (D=Delete, E=Edit)
+- ✅ Minor cosmetic changes
+
+---
+
 ## [2.0.0] - 2026-04-14
 
 ### Major Update: Complete Laravel 12 Refactor
@@ -209,6 +228,20 @@ php artisan serve
 # Visit http://localhost:8000/login
 ```
 
+### Contributors
+
+- **Architecture & Core**: DevOps Team
+- **Testing**: QA Team
+- **Documentation**: Tech Writer
+- **Security Review**: Security Team
+
+### Support
+
+For issues or questions:
+- Open issue on repository
+- Contact: support@cocoms.local
+- Security issues: security@cocoms.local
+
 ---
 
 ## [1.0.0] - (Original Release)
@@ -271,5 +304,5 @@ CoCoMS is distributed in the hope that it will be useful, but WITHOUT ANY WARRAN
 
 ---
 
-**Last Updated**: 2026-06-14  
-**Current Version**: 2.0.0
+**Last Updated**: 2026-06-15 
+**Current Version**: 2.0.1

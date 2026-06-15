@@ -3,8 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Letter;
-use App\Models\Sender;
-use App\Models\Recipient;
+use App\Models\Company;
 use App\Models\WorkPackage;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
@@ -20,8 +19,8 @@ class LetterFactory extends Factory
     {
         return [
             'id' => Str::uuid(),
-            'sender_id' => Sender::factory(),
-            'recipient_id' => Recipient::factory(),
+            'sender_id' => Company::factory(),
+            'recipient_id' => Company::factory(),
             'work_package_id' => WorkPackage::factory(),
             'docref' => 'DOC-' . fake()->unique()->bothify('??????'),
             'subject' => fake()->sentence(),

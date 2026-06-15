@@ -21,13 +21,53 @@ class LetterController extends Controller
     ) {
     }
 
-    public function index(): View
+    public function index(Request $request): View
     {
         $this->authorize('viewAny', Letter::class);
 
-        $letters = $this->letterService->getAllLetters();
+        $filter = $request->input('filter');
+        $filterFrom = $request->input('from');
+        $filterTo = $request->input('to');
+        $sortBy = $request->input('sort_by', 'docdate');
+        $sortDir = $request->input('sort_dir', 'desc');
 
-        return view('letters.index', ['letters' => $letters]);
+        // Validate sort parameters to prevent SQL injection
+        $allowedSortColumns = ['subject', 'docref', 'docdate', 'replyreq', 'confidential'];
+        if (!\in_array($sortBy, $allowedSortColumns)) {
+            $sortBy = 'docdate';
+        }
+        if (!\in_array($sortDir, ['asc', 'desc'])) {
+            $sortDir = 'desc';
+        }
+
+        // Apply status filter first
+        $letters = match ($filter) {
+            'pending-response' => $this->letterService->getLettersRequiringReply(sortBy: $sortBy, sortDir: $sortDir),
+            'confidential' => $this->letterService->getConfidentialLetters(sortBy: $sortBy, sortDir: $sortDir),
+            default => $this->letterService->getAllLetters(sortBy: $sortBy, sortDir: $sortDir),
+        };
+
+        // Apply from/to filters if specified
+        if ($filterFrom && $filterTo) {
+            $letters = $this->letterService->getLettersFromTo($filterFrom, $filterTo, sortBy: $sortBy, sortDir: $sortDir);
+        } elseif ($filterFrom) {
+            $letters = $this->letterService->getLettersFrom($filterFrom, sortBy: $sortBy, sortDir: $sortDir);
+        } elseif ($filterTo) {
+            $letters = $this->letterService->getLettersTo($filterTo, sortBy: $sortBy, sortDir: $sortDir);
+        }
+
+        // Get all companies for filter dropdowns
+        $companies = \App\Models\Company::orderBy('name')->get();
+
+        return view('letters.index', [
+            'letters' => $letters,
+            'filter' => $filter,
+            'filterFrom' => $filterFrom,
+            'filterTo' => $filterTo,
+            'sortBy' => $sortBy,
+            'sortDir' => $sortDir,
+            'companies' => $companies,
+        ]);
     }
 
     public function create(): View
@@ -126,5 +166,31 @@ class LetterController extends Controller
         $this->tagService->untagItem($tag->id, $letter->id, 'letters');
 
         return back()->with('success', 'Tag removed successfully.');
+    }
+
+    public function detachReference(Letter $letter, Letter $referencedLetter): RedirectResponse
+    {
+        $this->authorize('update', $letter);
+
+        $letter->referencedLetters()->detach($referencedLetter->id);
+
+        return back()->with('success', 'Letter reference removed successfully.');
+    }
+
+    public function attachReference(Request $request, Letter $letter): RedirectResponse
+    {
+        $this->authorize('update', $letter);
+
+        $request->validate([
+            'referenced_letter_id' => ['required', 'string', 'exists:letters,id', 'not_in:' . $letter->id],
+        ]);
+
+        $referencedLetter = Letter::findOrFail($request->referenced_letter_id);
+
+        if (!$letter->referencedLetters->contains('id', $referencedLetter->id)) {
+            $letter->referencedLetters()->attach($referencedLetter->id);
+        }
+
+        return back()->with('success', 'Letter reference added successfully.');
     }
 }

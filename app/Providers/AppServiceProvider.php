@@ -37,7 +37,7 @@ class AppServiceProvider extends ServiceProvider
 
     private function registerPolicies(): void
     {
-        \Illuminate\Support\Facades\Gate::policy(
+        Gate::policy(
             \App\Models\Letter::class,
             \App\Policies\LetterPolicy::class
         );

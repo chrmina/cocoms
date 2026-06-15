@@ -3,6 +3,7 @@
 ## Pre-Deployment Checklist
 
 ### Code Quality
+
 - [ ] All tests passing: `php artisan test`
 - [ ] No PHP errors: `php -l app/` (recursive check all files)
 - [ ] No security vulnerabilities: `composer audit`
@@ -10,6 +11,7 @@
 - [ ] All dependencies up to date: `composer update --dry-run`
 
 ### Security
+
 - [ ] `.env.production` prepared with secure values
 - [ ] Database password is strong (16+ characters, mixed case, numbers, symbols)
 - [ ] APP_KEY is generated: `php artisan key:generate`
@@ -19,12 +21,14 @@
 - [ ] Firewall rules prepared
 
 ### Database
+
 - [ ] Backup taken of existing database (if migrating)
 - [ ] Migration tested on staging: `php artisan migrate --pretend`
 - [ ] Data migration scripts tested
 - [ ] Rollback plan prepared
 
 ### Server Infrastructure
+
 - [ ] Web server (Nginx/Apache) installed and configured
 - [ ] PHP 8.1+ installed with required extensions
 - [ ] MySQL 8.0+ installed and running
@@ -38,6 +42,7 @@
 ## Production Deployment Steps
 
 ### 1. Deploy Code
+
 ```bash
 cd /var/www/cocoms
 
@@ -49,6 +54,7 @@ git clone <repository-url> .
 ```
 
 ### 2. Install Dependencies
+
 ```bash
 composer install --no-dev --optimize-autoloader
 npm install --production  # if applicable
@@ -56,6 +62,7 @@ npm run build  # if applicable
 ```
 
 ### 3. Environment Setup
+
 ```bash
 # Copy environment file
 cp .env.example .env.production
@@ -71,6 +78,7 @@ ln -s .env.production .env
 ```
 
 ### 4. Database Migration
+
 ```bash
 # Run migrations
 php artisan migrate --force
@@ -80,6 +88,7 @@ php artisan db:seed --class=InitialSeeder
 ```
 
 ### 5. Caching
+
 ```bash
 # Cache configuration
 php artisan config:cache
@@ -95,6 +104,7 @@ composer dump-autoload --optimize
 ```
 
 ### 6. Storage Setup
+
 ```bash
 # Create storage symlink
 php artisan storage:link
@@ -105,6 +115,7 @@ chown -R www-data:www-data storage bootstrap/cache
 ```
 
 ### 7. Web Server Configuration
+
 ```bash
 # Restart PHP-FPM
 sudo systemctl restart php8.1-fpm
@@ -117,6 +128,7 @@ sudo systemctl restart apache2
 ```
 
 ### 8. Verification
+
 ```bash
 # Test application
 curl -I https://your-domain.com/login
@@ -133,6 +145,7 @@ tail -f storage/logs/laravel.log
 ## Server Configuration Examples
 
 ### Nginx Configuration
+
 ```nginx
 server {
     listen 443 ssl http2;
@@ -211,6 +224,7 @@ server {
 ```
 
 ### Apache Configuration
+
 ```apache
 <VirtualHost *:443>
     ServerName cocoms.yourdomain.com
@@ -256,6 +270,7 @@ server {
 ## Backup & Recovery
 
 ### Automated Backup Script
+
 ```bash
 #!/bin/bash
 # /opt/scripts/backup-cocoms.sh
@@ -290,12 +305,14 @@ echo "Backup completed: $TIMESTAMP" >> /var/log/cocoms-backup.log
 ```
 
 Add to crontab:
+
 ```bash
 # Daily backup at 2 AM
 0 2 * * * /opt/scripts/backup-cocoms.sh
 ```
 
 ### Recovery Procedure
+
 ```bash
 # 1. Stop application
 sudo systemctl stop nginx
@@ -320,6 +337,7 @@ curl -I https://your-domain.com/login
 ## Monitoring & Maintenance
 
 ### Log Monitoring
+
 ```bash
 # Real-time log monitoring
 tail -f storage/logs/laravel.log
@@ -332,18 +350,20 @@ tail -f storage/logs/slow-queries.log
 ```
 
 ### Database Optimization
+
 ```bash
 # Analyze tables
-ANALYZE TABLE letters, senders, recipients, work_packages, tags_tags;
+ANALYZE TABLE letters, companies, work_packages, tags_tags;
 
 # Optimize tables
-OPTIMIZE TABLE letters, senders, recipients, work_packages, tags_tags;
+OPTIMIZE TABLE letters, companies, work_packages, tags_tags;
 
 # Check table integrity
-CHECK TABLE letters, senders, recipients, work_packages, tags_tags;
+CHECK TABLE letters, companies, work_packages, tags_tags;
 ```
 
 ### System Health Check
+
 ```bash
 #!/bin/bash
 # Check disk space
@@ -370,6 +390,7 @@ mysql -u root -p -e "SHOW STATUS;"
 ## Troubleshooting
 
 ### Application won't start
+
 ```bash
 # Check app key
 grep "^APP_KEY=" .env
@@ -386,6 +407,7 @@ tail -50 storage/logs/laravel.log
 ```
 
 ### Database connection errors
+
 ```bash
 # Test connection
 mysql -u cocoms_user -p -h localhost -D cocoms_laravel
@@ -401,6 +423,7 @@ mysql -u root -p -e "SHOW GRANTS FOR 'cocoms_user'@'localhost';"
 ```
 
 ### File upload fails
+
 ```bash
 # Check storage permissions
 ls -la storage/app/
@@ -416,6 +439,7 @@ df -h storage/
 ```
 
 ### Slow application
+
 ```bash
 # Check slow queries
 SET GLOBAL slow_query_log = 'ON';
@@ -423,14 +447,14 @@ SET GLOBAL long_query_time = 2;
 
 # Add indexes
 CREATE INDEX idx_letters_docref ON letters(docref);
-CREATE INDEX idx_senders_name ON senders(name);
-CREATE INDEX idx_recipients_name ON recipients(name);
+CREATE INDEX idx_companies_name ON companies(name);
 
 # Optimize autoloader
 composer dump-autoload --optimize
 ```
 
 ### High memory usage
+
 ```bash
 # Increase PHP memory limit
 php_value memory_limit = 512M
@@ -447,6 +471,7 @@ sudo systemctl restart php8.1-fpm
 ## Performance Optimization
 
 ### PHP Configuration
+
 ```ini
 ; /etc/php/8.1/fpm/pool.d/www.conf
 pm = dynamic
@@ -465,6 +490,7 @@ opcache.validate_timestamps=0
 ```
 
 ### MySQL Configuration
+
 ```ini
 ; /etc/mysql/mysql.conf.d/mysqld.cnf
 max_connections=1000
@@ -475,7 +501,8 @@ innodb_buffer_pool_size=512M
 innodb_log_file_size=100M
 ```
 
-### Nginx Configuration
+### Nginx Configuration (performance)
+
 ```nginx
 # Enable gzip compression
 gzip on;
@@ -494,6 +521,7 @@ location ~* \.(jpg|jpeg|png|gif|ico|css|js)$ {
 ## Scaling Considerations
 
 ### For 10,000+ users
+
 - Implement database replication
 - Use Redis for caching
 - Consider CDN for static files
@@ -502,6 +530,7 @@ location ~* \.(jpg|jpeg|png|gif|ico|css|js)$ {
 - Archive old data
 
 ### For high file volume
+
 - Implement S3/cloud storage
 - Use separate file server
 - Implement cleanup/archival
@@ -512,9 +541,10 @@ location ~* \.(jpg|jpeg|png|gif|ico|css|js)$ {
 ## Security Hardening
 
 ### Firewall Rules
+
 ```bash
 # Allow SSH (admin only)
-ufw allow from 111.0.111.0/24 to any port 22
+ufw allow from 203.0.113.0/24 to any port 22
 
 # Allow HTTP/HTTPS
 ufw allow 80/tcp
@@ -528,6 +558,7 @@ ufw enable
 ```
 
 ### SSL/TLS Configuration
+
 ```bash
 # Generate strong certificate
 certbot certonly --webroot -w /var/www/cocoms/public \
@@ -541,6 +572,7 @@ curl -I https://cocoms.yourdomain.com
 ```
 
 ### Regular Updates
+
 ```bash
 # Update OS
 sudo apt update && sudo apt upgrade
@@ -565,5 +597,5 @@ Commercial support is also available; contact [Christakis Mina](mailto://christo
 
 ---
 
-**Last Updated**: 2026-06-14  
-**Version**: 2.0.0 (Laravel 12 Refactor)
+**Last Updated**: 2026-06-15  
+**Version**: 2.0.1 (UI Redesign)

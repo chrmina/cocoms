@@ -4,23 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Models\Letter;
 use App\Models\WorkPackage;
-use App\Models\Sender;
-use App\Models\Recipient;
+use App\Models\Company;
 use App\Models\Tag;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class DashboardController extends Controller
 {
     public function index(): View
     {
-        $user = auth()->user();
-        
+        /** @var User|null $user */
+        $user = Auth::user();
+
         // Base KPIs
         $totalLetters = Letter::count();
         $lettersNeedingResponse = Letter::where('replyreq', true)->count();
         $confidentialLetters = Letter::where('confidential', true)->count();
-        $recentLetters = Letter::with('sender', 'recipient', 'workPackage')
+        $recentLetters = Letter::with('senderCompany', 'recipientCompany', 'workPackage')
             ->orderBy('docdate', 'desc')
             ->limit(5)
             ->get();
@@ -28,14 +29,13 @@ class DashboardController extends Controller
         // Admin-specific metrics
         $adminMetrics = null;
         $systemStats = null;
-        
+
         if ($user->isAdmin()) {
             $adminMetrics = [
                 'total_users' => User::count(),
                 'active_users' => User::where('active', true)->count(),
                 'total_work_packages' => WorkPackage::count(),
-                'total_senders' => Sender::count(),
-                'total_recipients' => Recipient::count(),
+                'total_companies' => Company::count(),
                 'total_tags' => Tag::count(),
             ];
 
@@ -61,8 +61,8 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
 
-        $lettersBySender = Sender::withCount('letters')
-            ->orderBy('letters_count', 'desc')
+        $lettersByCompany = Company::withCount('sentLetters')
+            ->orderBy('sent_letters_count', 'desc')
             ->limit(5)
             ->get();
 
@@ -76,14 +76,38 @@ class DashboardController extends Controller
             'systemStats' => $systemStats,
             'editorMetrics' => $editorMetrics,
             'lettersByWorkPackage' => $lettersByWorkPackage,
-            'lettersBySender' => $lettersBySender,
+            'lettersByCompany' => $lettersByCompany,
         ]);
     }
 
     private function calculateAverageResponseTime(): string
     {
-        // Placeholder for average response time calculation
-        // This would require tracking response dates
-        return 'N/A';
+        // Get all letters that required a reply and have been responded to
+        $repliedLetters = Letter::where('replyreq', true)
+            ->has('referencingLetters')
+            ->with('referencingLetters')
+            ->get();
+
+        if ($repliedLetters->isEmpty()) {
+            return 'N/A';
+        }
+
+        $totalDays = 0;
+        $count = 0;
+
+        foreach ($repliedLetters as $letter) {
+            foreach ($letter->referencingLetters as $response) {
+                $days = $letter->docdate->diffInDays($response->docdate);
+                $totalDays += $days;
+                $count++;
+            }
+        }
+
+        if ($count === 0) {
+            return 'N/A';
+        }
+
+        $averageDays = round($totalDays / $count, 1);
+        return "{$averageDays} days";
     }
 }

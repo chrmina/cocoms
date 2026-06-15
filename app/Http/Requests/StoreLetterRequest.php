@@ -18,8 +18,8 @@ class StoreLetterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'sender_id' => ['required', 'string', 'exists:senders,id'],
-            'recipient_id' => ['required', 'string', 'exists:recipients,id'],
+            'sender_id' => ['required', 'string', 'exists:companies,id'],
+            'recipient_id' => ['required', 'string', 'exists:companies,id'],
             'work_package_id' => ['required', 'string', 'exists:work_packages,id'],
             'subject' => ['required', 'string', 'max:500'],
             'contents' => ['nullable', 'string'],
@@ -28,6 +28,10 @@ class StoreLetterRequest extends FormRequest
             'confidential' => ['boolean'],
             'replyreq' => ['boolean'],
             'file' => ['nullable', 'file', 'max:51200', 'mimes:pdf,doc,docx,xls,xlsx,txt,jpg,jpeg,png'],
+            'letter_references' => ['nullable', 'array'],
+            'letter_references.*' => ['string', 'exists:letters,id'],
+            'tags' => ['nullable', 'array'],
+            'tags.*' => ['string', 'exists:tags_tags,id'],
         ];
     }
 }

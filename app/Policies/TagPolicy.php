@@ -9,12 +9,12 @@ class TagPolicy
 {
     public function viewAny(User $user): bool
     {
-        return $user->active && in_array($user->role, ['user', 'editor', 'admin']);
+        return $user->active && in_array($user->role, ['viewer', 'editor', 'admin']);
     }
 
     public function view(User $user, Tag $tag): bool
     {
-        return $user->active && in_array($user->role, ['user', 'editor', 'admin']);
+        return $user->active && in_array($user->role, ['viewer', 'editor', 'admin']);
     }
 
     public function create(User $user): bool
@@ -29,6 +29,6 @@ class TagPolicy
 
     public function delete(User $user, Tag $tag): bool
     {
-        return $user->active && $user->role === 'admin';
+        return $user->active && in_array($user->role, ['editor', 'admin']);
     }
 }

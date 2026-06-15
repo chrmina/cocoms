@@ -6,8 +6,6 @@
 
 **CoCoMS** is a modern Laravel 12 application for managing construction project correspondence, documents, and communications. It provides role-based access control, file management, full-text search, and organized tagging of documents.
 
-Why CoCoMS came to life? Simply because I wanted to scratch an itch! I wanted to create a simple yet powerful web-based document management system specifically for the management of correspondence generated during the execution of a construction project. I needed a system that can be used by the construction team and has the ability to control the access to the data based on the role of each user. Also wanted the system to be easily and readily accessible (i.e. using just a WEB browser) and have the ability to export data in Microsoft Excel format for further analysis and presentation.
-
 **Project Type**: Document Management System  
 **Framework**: Laravel 12  
 **Database**: MySQL 8.0+  
@@ -413,5 +411,6 @@ CoCoMS is distributed in the hope that it will be useful, but WITHOUT ANY WARRAN
 
 ## Version History
 
+- **v2.0.1** (2026-06-15): UI redesign
 - **v2.0.0** (2026-06-14): Laravel 12 refactor complete
 - **v1.0.0**: Original CakePHP version

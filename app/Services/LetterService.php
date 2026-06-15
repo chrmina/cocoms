@@ -3,28 +3,29 @@
 namespace App\Services;
 
 use App\Models\Letter;
-use App\Models\Sender;
-use App\Models\Recipient;
+use App\Models\Company;
 use App\Models\WorkPackage;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Http\UploadedFile;
 
 class LetterService
 {
-    public function __construct(private FileUploadService $fileUploadService)
-    {
+    public function __construct(
+        private FileUploadService $fileUploadService,
+        private TagService $tagService
+    ) {
     }
 
-    public function getAllLetters(int $perPage = 15): LengthAwarePaginator
+    public function getAllLetters(int $perPage = 15, string $sortBy = 'docdate', string $sortDir = 'desc'): LengthAwarePaginator
     {
         return Letter::with('sender', 'recipient', 'workPackage')
-            ->latest()
+            ->orderBy($sortBy, $sortDir)
             ->paginate($perPage);
     }
 
     public function getLetterById(string $id): Letter
     {
-        return Letter::with('sender', 'recipient', 'workPackage', 'taggedItems.tag')
+        return Letter::with('sender', 'recipient', 'workPackage', 'taggedItems.tag', 'referencedLetters')
             ->findOrFail($id);
     }
 
@@ -41,7 +42,25 @@ class LetterService
             unset($data['file']);
         }
 
-        return Letter::create($data);
+        $letterReferences = $data['letter_references'] ?? [];
+        unset($data['letter_references']);
+
+        $tags = $data['tags'] ?? [];
+        unset($data['tags']);
+
+        $letter = Letter::create($data);
+
+        if (!empty($letterReferences)) {
+            $letter->referencedLetters()->attach($letterReferences);
+        }
+
+        if (!empty($tags)) {
+            foreach ($tags as $tagId) {
+                $this->tagService->tagItem($tagId, $letter->id, 'letters');
+            }
+        }
+
+        return $letter;
     }
 
     public function updateLetter(Letter $letter, array $data): Letter
@@ -58,9 +77,26 @@ class LetterService
             unset($data['file']);
         }
 
+        $letterReferences = $data['letter_references'] ?? [];
+        unset($data['letter_references']);
+
+        $tags = $data['tags'] ?? [];
+        unset($data['tags']);
+
         $letter->update($data);
 
-        return $letter->fresh(['sender', 'recipient', 'workPackage']);
+        // Update letter references
+        $letter->referencedLetters()->sync($letterReferences);
+
+        // Update tags - delete existing and add new ones
+        $letter->taggedItems()->delete();
+        if (!empty($tags)) {
+            foreach ($tags as $tagId) {
+                $this->tagService->tagItem($tagId, $letter->id, 'letters');
+            }
+        }
+
+        return $letter->fresh(['sender', 'recipient', 'workPackage', 'referencedLetters']);
     }
 
     public function deleteLetter(Letter $letter): bool
@@ -98,19 +134,44 @@ class LetterService
             ->paginate($perPage);
     }
 
-    public function getConfidentialLetters(int $perPage = 15): Paginator
+    public function getConfidentialLetters(int $perPage = 15, string $sortBy = 'docdate', string $sortDir = 'desc'): LengthAwarePaginator
     {
         return Letter::with('sender', 'recipient', 'workPackage')
             ->where('confidential', true)
-            ->latest()
+            ->orderBy($sortBy, $sortDir)
             ->paginate($perPage);
     }
 
-    public function getLettersRequiringReply(int $perPage = 15): Paginator
+    public function getLettersRequiringReply(int $perPage = 15, string $sortBy = 'docdate', string $sortDir = 'desc'): LengthAwarePaginator
     {
         return Letter::with('sender', 'recipient', 'workPackage')
             ->where('replyreq', true)
-            ->latest()
+            ->orderBy($sortBy, $sortDir)
+            ->paginate($perPage);
+    }
+
+    public function getLettersFrom(string $senderId, int $perPage = 15, string $sortBy = 'docdate', string $sortDir = 'desc'): LengthAwarePaginator
+    {
+        return Letter::with('sender', 'recipient', 'workPackage')
+            ->where('sender_id', $senderId)
+            ->orderBy($sortBy, $sortDir)
+            ->paginate($perPage);
+    }
+
+    public function getLettersTo(string $recipientId, int $perPage = 15, string $sortBy = 'docdate', string $sortDir = 'desc'): LengthAwarePaginator
+    {
+        return Letter::with('sender', 'recipient', 'workPackage')
+            ->where('recipient_id', $recipientId)
+            ->orderBy($sortBy, $sortDir)
+            ->paginate($perPage);
+    }
+
+    public function getLettersFromTo(string $senderId, string $recipientId, int $perPage = 15, string $sortBy = 'docdate', string $sortDir = 'desc'): LengthAwarePaginator
+    {
+        return Letter::with('sender', 'recipient', 'workPackage')
+            ->where('sender_id', $senderId)
+            ->where('recipient_id', $recipientId)
+            ->orderBy($sortBy, $sortDir)
             ->paginate($perPage);
     }
 }

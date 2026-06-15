@@ -31,4 +31,9 @@ class TaggedItem extends Model
     {
         return $this->belongsTo(Tag::class, 'tag_id');
     }
+
+    public function letter()
+    {
+        return $this->belongsTo(Letter::class, 'fk_id', 'id');
+    }
 }

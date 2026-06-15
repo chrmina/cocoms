@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\User;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class UserService
 {
@@ -20,7 +21,7 @@ class UserService
 
     public function createUser(array $data): User
     {
-        $data['id'] = \Str::uuid();
+        $data['id'] = Str::uuid();
         $data['password'] = Hash::make($data['password']);
         $data['active'] = $data['active'] ?? true;
 

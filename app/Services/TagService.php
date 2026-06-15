@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Tag;
+use App\Models\Letter;
 use App\Models\TaggedItem;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -10,14 +11,42 @@ class TagService
 {
     public function getAllTags(int $perPage = 15): LengthAwarePaginator
     {
-        return Tag::withCount('taggedItems')
+        return Tag::addSelect([
+            'taggedItems_count' => TaggedItem::selectRaw('COUNT(*)')
+                ->whereColumn('tag_id', 'tags_tags.id')
+                ->where('fk_table', 'letters')
+        ])
             ->orderByDesc('counter')
             ->paginate($perPage);
     }
 
     public function getTagById(string $id): Tag
     {
-        return Tag::with('taggedItems')->findOrFail($id);
+        $tag = Tag::with([
+            'taggedItems' => function ($query) {
+                $query->where('fk_table', 'letters');
+            }
+        ])->findOrFail($id);
+
+        // Eager load letter relationships with companies
+        if ($tag->taggedItems->isNotEmpty()) {
+            $letterIds = $tag->taggedItems->pluck('fk_id')->unique();
+            $letters = Letter::with(['senderCompany', 'recipientCompany'])
+                ->whereIn('id', $letterIds)
+                ->get()
+                ->keyBy('id');
+
+            $tag->taggedItems->each(function ($taggedItem) use ($letters) {
+                if (isset($letters[$taggedItem->fk_id])) {
+                    $taggedItem->setRelation('letter', $letters[$taggedItem->fk_id]);
+                }
+            });
+        }
+
+        // Add count for the view check
+        $tag->taggedItems_count = $tag->taggedItems->count();
+
+        return $tag;
     }
 
     public function createTag(array $data): Tag
@@ -69,7 +98,9 @@ class TagService
 
     public function searchTags(string $query, int $perPage = 15): LengthAwarePaginator
     {
-        return Tag::withCount('taggedItems')
+        return Tag::withCount(['taggedItems' => function ($query) {
+            $query->where('fk_table', 'letters');
+        }])
             ->where('label', 'LIKE', "%{$query}%")
             ->orWhere('slug', 'LIKE', "%{$query}%")
             ->orderByDesc('counter')
@@ -78,7 +109,10 @@ class TagService
 
     public function getPopularTags(int $limit = 10)
     {
-        return Tag::orderByDesc('counter')
+        return Tag::withCount(['taggedItems' => function ($query) {
+            $query->where('fk_table', 'letters');
+        }])
+            ->orderByDesc('counter')
             ->limit($limit)
             ->get();
     }

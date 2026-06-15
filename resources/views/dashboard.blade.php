@@ -9,21 +9,20 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <!-- Welcome Banner -->
             <div class="mb-6 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg shadow-lg p-6">
-                <h1 class="text-3xl font-bold mb-2">Welcome, {{ $user->first_name }}!</h1>
+                <h1 class="text-white text-3xl font-bold mb-2">Welcome, {{ $user->first_name }}!</h1>
                 <p class="text-blue-100">You are logged in as <strong>{{ ucfirst($user->role) }}</strong></p>
             </div>
 
             <!-- Key Performance Indicators -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-6" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
                 <!-- Total Letters -->
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-gray-500 text-sm font-medium">Total Letters</p>
+                                <p class="text-gray-500 text-sm font-medium">📄 Total Letters</p>
                                 <p class="text-3xl font-bold text-gray-900 mt-1">{{ $totalLetters }}</p>
                             </div>
-                            <div class="text-blue-500 text-4xl">📄</div>
                         </div>
                         <a href="{{ route('letters.index') }}" class="mt-4 inline-flex text-sm text-blue-600 hover:text-blue-800">
                             View all →
@@ -36,16 +35,18 @@
                     <div class="p-6">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-gray-500 text-sm font-medium">Pending Response</p>
+                                <p class="text-gray-500 text-sm font-medium">⚠️ Pending Response</p>
                                 <p class="text-3xl font-bold text-gray-900 mt-1">{{ $lettersNeedingResponse }}</p>
                             </div>
-                            <div class="text-orange-500 text-4xl">⚠️</div>
                         </div>
                         @if ($lettersNeedingResponse > 0)
                             <div class="mt-4 h-2 bg-orange-100 rounded-full">
                                 <div class="h-full bg-orange-500 rounded-full" style="width: {{ min(100, ($lettersNeedingResponse / max($totalLetters, 1)) * 100) }}%"></div>
                             </div>
                         @endif
+                        <a href="{{ route('letters.index', ['filter' => 'pending-response']) }}" class="mt-4 inline-flex text-sm text-blue-600 hover:text-blue-800">
+                            View pending →
+                        </a>
                     </div>
                 </div>
 
@@ -54,11 +55,13 @@
                     <div class="p-6">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-gray-500 text-sm font-medium">Confidential</p>
+                                <p class="text-gray-500 text-sm font-medium">🔒 Confidential</p>
                                 <p class="text-3xl font-bold text-gray-900 mt-1">{{ $confidentialLetters }}</p>
                             </div>
-                            <div class="text-red-500 text-4xl">🔒</div>
                         </div>
+                        <a href="{{ route('letters.index', ['filter' => 'confidential']) }}" class="mt-4 inline-flex text-sm text-blue-600 hover:text-blue-800">
+                            View confidential →
+                        </a>
                     </div>
                 </div>
 
@@ -68,11 +71,13 @@
                         <div class="p-6">
                             <div class="flex items-center justify-between">
                                 <div>
-                                    <p class="text-gray-500 text-sm font-medium">Work Packages</p>
+                                    <p class="text-gray-500 text-sm font-medium">📦 Work Packages</p>
                                     <p class="text-3xl font-bold text-gray-900 mt-1">{{ $adminMetrics['total_work_packages'] }}</p>
                                 </div>
-                                <div class="text-purple-500 text-4xl">📦</div>
                             </div>
+                            <a href="{{ route('work-packages.index') }}" class="mt-4 inline-flex text-sm text-blue-600 hover:text-blue-800">
+                            View all →
+                        </a>
                         </div>
                     </div>
                 @endif
@@ -82,7 +87,7 @@
             @if ($adminMetrics)
                 <div class="mb-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">System Overview</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="grid grid-cols-1 lg:grid-cols-4 gap-4" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
                         <!-- Total Users -->
                         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                             <div class="p-6">
@@ -92,19 +97,11 @@
                             </div>
                         </div>
 
-                        <!-- Total Senders -->
+                        <!-- Total Companies -->
                         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                             <div class="p-6">
-                                <p class="text-gray-500 text-sm font-medium">Total Senders</p>
-                                <p class="text-2xl font-bold text-gray-900 mt-2">{{ $adminMetrics['total_senders'] }}</p>
-                            </div>
-                        </div>
-
-                        <!-- Total Recipients -->
-                        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                            <div class="p-6">
-                                <p class="text-gray-500 text-sm font-medium">Total Recipients</p>
-                                <p class="text-2xl font-bold text-gray-900 mt-2">{{ $adminMetrics['total_recipients'] }}</p>
+                                <p class="text-gray-500 text-sm font-medium">Total Companies</p>
+                                <p class="text-2xl font-bold text-gray-900 mt-2">{{ $adminMetrics['total_companies'] }}</p>
                             </div>
                         </div>
 
@@ -166,7 +163,7 @@
                                                 {{ Str::limit($letter->subject, 40) }}
                                             </a>
                                             <p class="text-xs text-gray-500 mt-1">
-                                                From: {{ $letter->sender?->name ?? 'Unknown' }}
+                                                From: {{ $letter->senderCompany?->name ?? 'Unknown' }}
                                             </p>
                                             <p class="text-xs text-gray-500">
                                                 Date: {{ $letter->docdate?->format('M d, Y') ?? 'N/A' }}
@@ -228,31 +225,31 @@
                 </div>
             </div>
 
-            <!-- Top Senders -->
-            @if ($lettersBySender->count())
+            <!-- Top Companies (Senders) -->
+            @if ($lettersByCompany->count())
                 <div class="mt-6 bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-                        <h3 class="text-lg font-semibold text-gray-900">Most Active Senders</h3>
-                        <a href="{{ route('senders.index') }}" class="text-sm text-blue-600 hover:text-blue-800">View All</a>
+                        <h3 class="text-lg font-semibold text-gray-900">Most Active Senders (Companies)</h3>
+                        <a href="{{ route('companies.index') }}" class="text-sm text-blue-600 hover:text-blue-800">View All</a>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-sm">
                             <thead class="bg-gray-50 border-b border-gray-200">
                                 <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Sender</th>
-                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Letters</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Company</th>
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Letters Sent</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-200">
-                                @foreach ($lettersBySender as $sender)
+                                @foreach ($lettersByCompany as $company)
                                     <tr class="hover:bg-gray-50">
                                         <td class="px-6 py-4 text-sm font-medium text-gray-900">
-                                            <a href="{{ route('senders.show', $sender) }}" class="hover:text-blue-600">
-                                                {{ $sender->name }}
+                                            <a href="{{ route('companies.show', $company) }}" class="hover:text-blue-600">
+                                                {{ $company->name }}
                                             </a>
                                         </td>
                                         <td class="px-6 py-4 text-center text-sm text-gray-900">
-                                            {{ $sender->letters_count }}
+                                            {{ $company->sent_letters_count }}
                                         </td>
                                     </tr>
                                 @endforeach
