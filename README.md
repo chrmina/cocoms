@@ -12,6 +12,8 @@
 **PHP**: 8.1+  
 **License**: F/OSS (GNU GPL)
 
+Refer to [Docs](/Docs/home.md] for details about usage, etc.
+
 ---
 
 ## Features
